@@ -19,7 +19,7 @@ class graphite::config inherits graphite::params {
 
 	# we need an web server with python support
 	# apache with mod_wsgi or nginx with gunicorn
-	case $graphite::gr_web_server {
+	case $::graphite::gr_webserver {
 		'apache': {
 			include graphite::config_apache
 		}

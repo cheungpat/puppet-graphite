@@ -12,8 +12,8 @@
 # Read http://code.google.com/p/modwsgi/wiki/ConfigurationDirectives#WSGISocketPrefix
 WSGISocketPrefix <%= scope.lookupvar('graphite::params::apache_wsgi_socket_prefix') %>
 
-<VirtualHost *:<%= scope.lookupvar('graphite::gr_apache_port') %>>
-	ServerName <%= fqdn %>
+<VirtualHost *:<%= scope.lookupvar('graphite::gr_webserver_port') %>>
+	ServerName <%= @fqdn %>
 	DocumentRoot "/opt/graphite/webapp"
 
 	ErrorLog /opt/graphite/storage/error.log
@@ -29,6 +29,13 @@ WSGISocketPrefix <%= scope.lookupvar('graphite::params::apache_wsgi_socket_prefi
 	# XXX You will need to create this file! There is a graphite.wsgi.example
 	# file in this directory that you can safely use, just copy it to graphite.wgsi
 	WSGIScriptAlias / /opt/graphite/conf/graphite.wsgi
+
+<% unless scope.lookupvar('graphite::gr_htpasswd') == :undef -%>
+	AuthType Basic
+	AuthName "You shall not pass";
+	AuthBasicProvider file
+	AuthUserFile <%= scope.lookupvar('graphite::apache_dir') %>/graphite-htpasswd;
+<% end %>
 
 	Alias /content/ /opt/graphite/webapp/content/
 	<Location "/content/">

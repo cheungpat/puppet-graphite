@@ -52,12 +52,12 @@
 # [*gr_storage_schemas*]
 #  The storage schemas.
 #  Default is [{name => "default", pattern => ".*", retentions => "1s:30m,1m:1d,5m:2y"}]
-# [*gr_web_server*]
+# [*gr_webserver*]
 #   The web server to use.
 #   Valid values are 'apache' and 'nginx'. 'nginx' is only supported on
 #   Debian-like systems.
 #   Default is 'apache'.
-# [*gr_apache_port*]
+# [*gr_webserver_port*]
 #   The port to run web server on if you have an existing web server on the default
 #   port 80.
 #   Default is 80.
@@ -67,15 +67,15 @@
 # [*gr_django_db_xxx*]
 #   Django database settings. (engine|name|user|password|host|port)
 #   Default is a local sqlite3 db.
-# [*secret_key*]
+# [*gr_secret_key*]
 #   Secret used as salt for things like hashes, cookies, sessions etc.
 #   Has to be the same on all nodes of a graphite cluster.
 #   Default is UNSAFE_DEFAULT (CHANGE IT!)
-# [*nginx_htpasswd*]
+# [*gr_htpasswd*]
 #   The user and salted SHA-1 (SSHA) password for Nginx authentication.
-#   If set, Nginx will be configured to use HTTP Basic authentication with the
+#   If set, Nginx/Apache will be configured to use HTTP Basic authentication with the
 #   given user & password.
-#   Default is undefined
+#   Default is undefined.
 
 
 # === Examples
@@ -114,9 +114,6 @@ class graphite (
       retentions => '1s:30m,1m:1d,5m:2y'
     }
   ],
-  $gr_web_server                = 'apache',
-  $gr_apache_port               = 80,
-  $gr_apache_port_https         = 443,
   $gr_django_1_4_or_less        = false,
   $gr_django_db_engine          = 'django.db.backends.sqlite3',
   $gr_django_db_name            = '/opt/graphite/storage/graphite.db',
@@ -124,8 +121,11 @@ class graphite (
   $gr_django_db_password        = '',
   $gr_django_db_host            = '',
   $gr_django_db_port            = '',
-  $secret_key                   = 'UNSAFE_DEFAULT',
-  $nginx_htpassword             = undef,
+  $gr_secret_key                = 'UNSAFE_DEFAULT',
+  $gr_webserver                 = 'apache',
+  $gr_webserver_port            = 80,
+  $gr_webserver_port_https      = 443,
+  $gr_htpasswd                  = undef,
 ) {
 
 	class { 'graphite::install': notify => Class['graphite::config'], }

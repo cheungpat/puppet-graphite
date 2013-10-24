@@ -55,8 +55,9 @@ class graphite::params {
   }
 
   $nginxconf_dir = '/etc/nginx/sites-available'
+  $nginx_dir     = '/etc/nginx'
 
-  $web_server_pkg = $graphite::gr_web_server ? {
+  $web_server_pkg = $::graphite::gr_webserver ? {
     apache  => $apache_pkg,
     nginx   => 'nginx',
     default => fail('The only supported web servers are \'apache\' and \'nginx\''),
